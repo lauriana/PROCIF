@@ -1,0 +1,126 @@
+<Schema name="PC IFPR Palmas">
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="Tempo">
+    <Hierarchy name="Ano" visible="true" hasAll="true" allMemberName="Todos os anos" primaryKey="id_tempo">
+      <Table name="dim_tempo" schema="public">
+      </Table>
+      <Level name="Ano" visible="true" column="ano" type="String" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Pequisador">
+    <Hierarchy name="Pesquisador" visible="true" hasAll="true" allMemberName="Todos Pesquisadores" primaryKey="id_pesquisador">
+      <Table name="dim_pesquisador" schema="public">
+      </Table>
+      <Level name="Pesquisador" visible="true" column="nome_pesquisador" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Formacao" visible="true" column="formacao_pesquisador" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Colegiado">
+    <Hierarchy name="Colegiado" visible="true" hasAll="true" allMemberName="Todos Colegiados" primaryKey="id_colegiado">
+      <Table name="dim_colegiado" schema="public">
+      </Table>
+      <Level name="Colegiado" visible="true" column="nome_colegiado" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Area de Conhecimento">
+    <Hierarchy name="Area de Conhecimento" visible="true" hasAll="true" allMemberName="Todas as Areas" primaryKey="id_area">
+      <Table name="dim_area_de_conhecimento" schema="public">
+      </Table>
+      <Level name="Area de Conhecimento" visible="true" column="nome_area" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Sub Area de Conhecimento">
+    <Hierarchy name="Sub Area de Conhecimento" visible="true" hasAll="true" allMemberName="Todas as Subareas" primaryKey="id_subarea">
+      <Table name="dim_subarea" schema="public">
+      </Table>
+      <Level name="Subarea de Conhecimento" visible="true" column="nome_subarea" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Producao Cientifica" visible="true" cache="true" enabled="true">
+    <Table name="fato_producao" schema="public">
+    </Table>
+    <DimensionUsage source="Tempo" name="Tempo" visible="true" foreignKey="id_tempo" highCardinality="false">
+    </DimensionUsage>
+    <Dimension type="StandardDimension" visible="true" foreignKey="id_publicacao" highCardinality="false" name="Tipo Publicacao">
+      <Hierarchy name="Tipo Publicacao" visible="true" hasAll="true" allMemberName="Todos as Publicacao" primaryKey="id_publicacao">
+        <Table name="dim_publicacao" schema="public">
+        </Table>
+        <Level name="Tipo Agrupagor" visible="true" column="tipo_agrupador" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Sub Tipo Producao" visible="true" column="subtipo_producao" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Tipo Producao" visible="true" column="tipo_producao" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Titulo" visible="true" column="titulo" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="Pequisador" name="Pesquisador" visible="true" foreignKey="id_pesquisador" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Colegiado" name="Colegiado" visible="true" foreignKey="id_colegiado" highCardinality="false">
+    </DimensionUsage>
+    <Dimension type="StandardDimension" visible="true" foreignKey="id_cidade" highCardinality="false" name="Cidade">
+      <Hierarchy name="Localizacao" visible="true" hasAll="true" allMemberName="Todas as Localizacoes" primaryKey="id_cidade">
+        <Table name="dim_cidade" schema="public">
+        </Table>
+        <Level name="Estado" visible="true" column="uf" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Cidade" visible="true" column="nome_cidade" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="Area de Conhecimento" name="Area de Conhecimento" visible="true" foreignKey="id_area" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Sub Area de Conhecimento" name="Sub Area de Conhecimento" visible="true" foreignKey="id_subarea" highCardinality="false">
+    </DimensionUsage>
+    <Dimension type="StandardDimension" visible="true" foreignKey="id_evento" highCardinality="false" name="Evento">
+      <Hierarchy name="Evento" visible="true" hasAll="true" allMemberName="Todos os Eventos" primaryKey="id_evento">
+        <Table name="dim_evento" schema="public">
+        </Table>
+        <Level name="Evento" visible="true" column="nome_evento" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Quantidade Publicacao" column="id_publicacao" datatype="Integer" aggregator="distinct-count" visible="true">
+    </Measure>
+    <CalculatedMember name="Percentual Publicacao por Tipo" formatString="0.00%" formula="([Tipo Publicacao].CurrentMember/[Tipo Publicacao].CurrentMember.Parent)" dimension="Measures" visible="true">
+    </CalculatedMember>
+    <CalculatedMember name="Percentual Publicacao por Localizacao" formatString="0.00%" formula="([Cidade].CurrentMember/[Cidade].CurrentMember.Parent)" dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+  <Cube name="Projetos" visible="true" cache="true" enabled="true">
+    <Table name="fato_projeto" schema="public">
+    </Table>
+    <DimensionUsage source="Tempo" name="Tempo" visible="true" foreignKey="id_tempo" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Pequisador" name="Pesquisador" visible="true" foreignKey="id_pesquisador" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Colegiado" name="Colegiado" visible="true" foreignKey="id_colegiado" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Area de Conhecimento" name="Area de Conhecimento" visible="true" foreignKey="id_area" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Sub Area de Conhecimento" name="Sub Area de Conhecimento" caption="Sub&#225;rea de Conhecimento" visible="true" foreignKey="id_subarea" highCardinality="false">
+    </DimensionUsage>
+    <Dimension type="StandardDimension" visible="true" foreignKey="id_proj" highCardinality="false" name="Tipo Projeto">
+      <Hierarchy name="Tipo Projeto" visible="true" hasAll="true" allMemberName="Todos os tipos de projeto" primaryKey="id_projeto">
+        <Table name="dim_projeto" schema="public">
+        </Table>
+        <Level name="Tipo Projeto" visible="true" column="tipo" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Titulo Projeto" visible="true" column="titulo" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Quantidade Projeto" column="id_proj" datatype="Integer" aggregator="distinct-count" visible="true">
+    </Measure>
+    <CalculatedMember name="Percentual Tipo Projeto" formatString="0.00%" formula="([Tipo Projeto].CurrentMember/[Tipo Projeto].CurrentMember.Parent)" dimension="Measures" visible="true">
+    </CalculatedMember>
+    <CalculatedMember name="Percentual Projetos por Area" formula="([Area de Conhecimento].CurrentMember/[Area de Conhecimento].CurrentMember.Parent)" dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+</Schema>
