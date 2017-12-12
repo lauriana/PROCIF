@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="gAnoColegiado" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gAno" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="colegiadoPesquisador" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="pesquisadorColegiado" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gTipoPublicacao" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gTipoPublicacaoColegiado" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gAreaConhecimento" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gAreaconhecimentoColegiado" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gEstados" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+      <Connection id="gEventos" type="mondrian.jndi">
+         <Catalog>mondrian:/Producao+Cientifica+v2</Catalog>
+         <Jndi>Procif</Jndi>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" connection="gAnoColegiado" id="gAnoColegiado" type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters>
+         <Parameter default="PARAM_COLEGIADO" name="PARAM_COLEGIADO" type="String"/>
+      </Parameters>
+      <Query><![CDATA[WITH
+SET [~FILTER] AS
+    {[Tempo.Ano].[${PARAM_COLEGIADO}]}
+    
+SET [~ROWS] AS
+    {[Colegiado].[Colegiado].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]
+WHERE [~FILTER]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gAno" id="gAno" type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Tempo.Ano].[Ano].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="colegiadoPesquisador" id="colegiadoPesquisador"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Colegiado].[Colegiado].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="pesquisadorColegiado" id="pesquisadorColegiado"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters>
+         <Parameter default="PARAM_PESQUI" name="PARAM_PESQUI" type="String"/>
+      </Parameters>
+      <Query><![CDATA[WITH
+SET [~FILTER] AS
+    {[Colegiado].[${PARAM_PESQUI}]}
+SET [~ROWS] AS
+    {[Pesquisador].[Pesquisador].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]
+WHERE [~FILTER]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gTipoPublicacao" id="gTipoPublicacao" type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Tipo Publicacao].[Tipo Agrupagor].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gTipoPublicacaoColegiado"
+               id="gTipoPublicacaoColegiado"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters>
+         <Parameter default="PARAM_TIPO" name="PARAM_TIPO" type="String"/>
+      </Parameters>
+      <Query><![CDATA[WITH
+SET [~FILTER] AS
+    {[Tipo Publicacao].[${PARAM_TIPO}]}
+SET [~ROWS] AS
+    {[Colegiado].[Colegiado].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]
+WHERE [~FILTER]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gAreaConhecimento" id="gAreaConhecimento"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Area de Conhecimento].[Area de Conhecimento].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gAreaconhecimentoColegiado"
+               id="gAreaconhecimentoColegiado"
+               type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters>
+         <Parameter default="PARAM_AREA" name="PARAM_AREA" type="String"/>
+      </Parameters>
+      <Query><![CDATA[WITH
+SET [~FILTER] AS
+    {[Area de Conhecimento].[${PARAM_AREA}]}
+SET [~ROWS] AS
+    {[Colegiado].[Colegiado].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]
+WHERE [~FILTER]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gEstados" id="gEstados" type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Cidade.Localizacao].[Estado].Members}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+   <DataAccess access="public" connection="gEventos" id="gEventos" type="mdx">
+      <BandedMode>compact</BandedMode>
+      <Cache duration="3600" enabled="true"/>
+      <Columns/>
+      <Parameters/>
+      <Query><![CDATA[WITH
+SET [~ROWS] AS
+    {[Tipo Publicacao].[EVENTO].[CONGRESSO], [Tipo Publicacao].[EVENTO].[ENCONTRO], [Tipo Publicacao].[EVENTO].[EXPOSICAO], [Tipo Publicacao].[EVENTO].[OFICINA], [Tipo Publicacao].[EVENTO].[OUTRA], [Tipo Publicacao].[EVENTO].[SEMINARIO], [Tipo Publicacao].[EVENTO].[SIMPOSIO]}
+SELECT
+NON EMPTY {[Measures].[Quantidade Publicacao]} ON COLUMNS,
+NON EMPTY [~ROWS] ON ROWS
+FROM [Producao Cientifica]]]></Query>
+   </DataAccess>
+</CDADescriptor>
